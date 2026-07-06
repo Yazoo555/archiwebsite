@@ -1,6 +1,6 @@
 <template>
   <section
-    class="relative flex min-h-screen items-center overflow-hidden px-6 md:px-12"
+    class="relative flex min-h-dvh items-center overflow-hidden px-6 md:px-12"
   >
     <!-- Subtle background grid pattern -->
     <div
