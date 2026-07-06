@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  /* Backgrounds */
+  --color-background: #F8F6F3;
+  --color-surface: #F0EDE8;
+  --color-card: #FFFFFF;
+
+  /* Text — darkened for better readability */
+  --color-foreground: #1A1A1A;
+  --color-muted: #4A4A4A;
+  --color-subtle: #767676;
+
+  /* Accents — richer, more architectural */
+  --color-accent: #8B7355;
+  --color-accent-soft: #C9B8A2;
+  --color-accent-deep: #5C4F3E;
+
+  /* Architectural touches */
+  --color-line: #D4CBC3;
+  --color-highlight: #B49F8A;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", "Times New Roman", serif;
+  --font-accent: "Space Grotesk", ui-monospace, monospace;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-deep);
+}
+
+/* Selection styling — visible and intentional */
+::selection {
+  background-color: var(--color-accent);
+  color: #FFFFFF;
+}
+
+::-moz-selection {
+  background-color: var(--color-accent);
+  color: #FFFFFF;
+}
