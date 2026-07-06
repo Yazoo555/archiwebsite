@@ -20,7 +20,7 @@
     />
 
     <div
-      class="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center gap-10 sm:gap-14 lg:flex-row lg:gap-20"
+      class="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center gap-10 sm:gap-14 lg:flex-row lg:gap-20 pt-20 sm:pt-24 lg:pt-0"
     >
       <!-- Left Column — Text Content -->
       <div
