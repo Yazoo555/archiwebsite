@@ -1,0 +1,555 @@
+================================================================================
+                          ARCHITECTURE PORTFOLIO WEBSITE
+                        Comprehensive Documentation v1.0
+================================================================================
+
+TABLE OF CONTENTS
+-----------------
+1. Project Overview
+2. Technology Stack
+3. Project Structure
+4. Entry Point & Bootstrap
+5. Root Application Component (App.vue)
+6. Routing System
+7. Route Behavior & Scroll Management
+8. Navigation Flow & Redirections
+9. Homepage Implementation (HomeView.vue)
+10. Component Architecture
+11. Styling & Theme System
+12. Animation System
+13. Data Layer
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+This is a single-page application (SPA) portfolio website for an architecture
+and engineering practice called "Studio." The website showcases the firm's
+projects, provides contact information, and presents a professional brand
+identity with smooth animations and a minimalist design aesthetic.
+
+The site uses a single-view architecture where all routes render the same
+HomeView component, but navigate to different sections within the page.
+
+================================================================================
+2. TECHNOLOGY STACK
+================================================================================
+
+Core Framework:
+- Vue 3.5.38 (Composition API with <script setup>)
+- TypeScript 6.0
+- Vite 8.0.16 (Build tool)
+- Vue Router 4.6.4 (Client-side routing)
+
+Styling:
+- Tailwind CSS 4.3.2 (via @tailwindcss/vite plugin)
+- Custom CSS variables for theming
+- Google Fonts: Inter, Playfair Display, Space Grotesk
+
+Animation:
+- @vueuse/motion 3.0.3 (Vue Motion plugin for scroll-triggered animations)
+
+UI Components:
+- @headlessui/vue 1.7.23 (Accessible UI primitives - available but not currently used)
+- @heroicons/vue 2.2.0 (Icon library - available but not currently used)
+
+Development:
+- vue-tsc 3.3.5 (Type checking)
+- vite-plugin-vue-devtools 8.1.2
+- PostCSS 8.5.16
+- Autoprefixer 10.5.2
+
+================================================================================
+3. PROJECT STRUCTURE
+================================================================================
+
+archi-portfolio/
+├── index.html                    # HTML entry point
+├── package.json                  # Dependencies and scripts
+├── vite.config.ts                # Vite build configuration
+├── vercel.json                   # Vercel deployment configuration
+├── README.md                     # Project documentation
+├── tsconfig.json                 # Root TypeScript config
+├── tsconfig.app.json             # App TypeScript config
+├── tsconfig.node.json            # Node TypeScript config
+├── .vscode/
+│   └── extensions.json           # Recommended VS Code extensions
+└── src/
+    ├── main.ts                   # Application entry point
+    ├── App.vue                   # Root Vue component
+    ├── style.css                 # Global styles & Tailwind config
+    ├── types/
+    │   └── project.ts            # TypeScript types & project data
+    ├── router/
+    │   └── index.ts              # Vue Router configuration
+    ├── views/
+    │   └── HomeView.vue          # Main (and only) view component
+    └── components/
+        ├── AppHeader.vue         # Fixed navigation header
+        ├── AppFooter.vue         # Site footer
+        ├── HeroSection.vue       # Hero banner with CTA
+        ├── ProjectsSection.vue   # Projects grid section
+        ├── ProjectCard.vue       # Individual project card
+        ├── ImageLoader.vue       # Image with loading skeleton
+        ├── BackToTop.vue         # Scroll-to-top button
+        └── LoadingScreen.vue     # Initial loading animation
+
+================================================================================
+4. ENTRY POINT & BOOTSTRAP (main.ts)
+================================================================================
+
+The application bootstraps in src/main.ts with the following sequence:
+
+1. Scroll Restoration Override:
+   The browser's native scroll restoration is set to 'manual' mode. This
+   prevents the browser from automatically restoring scroll position on
+   page refresh, allowing Vue Router's scrollBehavior to manage it
+   exclusively.
+
+   if ('scrollRestoration' in history) {
+     history.scrollRestoration = 'manual'
+   }
+
+2. Vue App Creation:
+   - Creates the Vue application instance from App.vue
+   - Installs the MotionPlugin for animation support
+   - Installs the Vue Router
+
+3. Mounting:
+   The app mounts to the #app DOM element defined in index.html.
+
+================================================================================
+5. ROOT APPLICATION COMPONENT (App.vue)
+================================================================================
+
+App.vue serves as the root layout component with the following structure:
+
+Template Structure:
+┌─────────────────────────────────────────┐
+│ <div class="min-h-dvh bg-background">   │
+│   ├── <AppHeader />       (Fixed nav)   │
+│   ├── <main>                           │
+│   │   └── <router-view /> (Page content)│
+│   ├── <AppFooter />       (Site footer) │
+│   ├── <BackToTop />       (Float button)│
+│   └── <LoadingScreen />   (Splash)      │
+│ </div>                                 │
+└─────────────────────────────────────────┘
+
+Key Implementation Details:
+
+- Layout: Uses min-h-dvh (minimum viewport height) with background color
+- State Management: Provides a reactive `showSite` ref via Vue's provide/inject
+- Loading Screen: Conditionally renders based on `showSite` state
+  - Initially `showSite` is false, so LoadingScreen is visible
+  - When LoadingScreen completes its animation, it emits 'complete' event
+  - App.vue listens and sets showSite to true, removing the loading screen
+- The provide('showSite', showSite) makes this state available to all
+  descendant components (used by HomeView to coordinate section scrolling)
+
+================================================================================
+6. ROUTING SYSTEM (router/index.ts)
+================================================================================
+
+The router uses createWebHistory() for clean URLs without hash fragments.
+
+Route Definitions:
+─────────────────
+
+┌──────────────────────┬──────────────────┬─────────────────────┐
+│ Path                 │ Name             │ Component           │
+├──────────────────────┼──────────────────┼─────────────────────┤
+│ /                    │ home             │ HomeView            │
+│ /projects            │ projects         │ HomeView            │
+│ /about               │ about            │ HomeView            │
+│ /contact             │ contact          │ HomeView            │
+│ /:pathMatch(.*)*     │ (catch-all)      │ Redirects to /      │
+└──────────────────────┴──────────────────┴─────────────────────┘
+
+IMPORTANT DESIGN DECISION:
+All defined routes (/, /projects, /about, /contact) render the SAME
+component (HomeView). This is a single-page architecture where navigation
+doesn't load new pages but instead scrolls to different sections within
+the same page.
+
+================================================================================
+7. ROUTE BEHAVIOR & SCROLL MANAGEMENT
+================================================================================
+
+Scroll Behavior Configuration:
+──────────────────────────────
+
+The router defines a custom scrollBehavior function with three cases:
+
+1. Back/Forward Navigation:
+   When using browser back/forward buttons, the saved scroll position
+   is restored exactly as the user left it.
+
+   if (savedPosition) {
+     return savedPosition
+   }
+
+2. Hash Navigation:
+   When navigating to a route with a hash (e.g., /#projects), the router
+   smoothly scrolls to the element with that ID.
+
+   if (to.hash) {
+     return { el: to.hash, behavior: 'smooth' }
+   }
+
+3. Fresh Load / Refresh:
+   On initial page load or manual refresh, always scroll to the top
+   (position 0,0) with instant scrolling (no animation).
+
+   return { top: 0 }
+
+Section Scrolling in HomeView:
+───────────────────────────────
+
+HomeView.vue implements an additional scroll mechanism via a watcher:
+
+const sectionMap: Record<string, string> = {
+  projects: 'projects',
+  about: 'about',
+  contact: 'contact',
+}
+
+The watcher monitors:
+- route.name changes
+- showSite (loading screen completion)
+
+When both conditions are met (loading complete AND route name exists):
+1. Maps route name to a DOM element ID
+2. Waits 100ms for DOM to render
+3. Smoothly scrolls to that section
+
+This means:
+- Navigating to /projects scrolls to the #projects section
+- Navigating to /about would scroll to #about (if it exists)
+- Navigating to /contact would scroll to #contact (if it exists)
+- Navigating to / stays at the top (Hero section)
+
+================================================================================
+8. NAVIGATION FLOW & REDIRECTIONS
+================================================================================
+
+Complete Navigation Flow:
+─────────────────────────
+
+1. Initial Page Load:
+   ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+   │ Browser Load │────>│ LoadingScreen │────>│ HomeView    │
+   │ / (or any)   │     │ (1.8s anim)   │     │ (Hero)     │
+   └─────────────┘     └──────────────┘     └─────────────┘
+
+2. User Navigation:
+   ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+   │ Click Header │────>│ Router Push   │────>│ HomeView    │
+   │ Link         │     │ /projects     │     │ (same)     │
+   └─────────────┘     └──────────────┘     └──────┬──────┘
+                                                     │
+                                                     ▼
+                                              ┌─────────────┐
+                                              │ Section     │
+                                              │ Scroll to   │
+                                              │ #projects   │
+                                              └─────────────┘
+
+3. Redirections:
+   - Unknown paths (e.g., /invalid-page) are caught by the catch-all route
+   - Catch-all pattern: /:pathMatch(.*)*
+   - All unknown paths redirect to / (home)
+   - This prevents 404 errors and keeps users on the site
+
+4. Navigation Links (Header):
+   ┌────────────────────────────────────────┐
+   │ Logo (/)  │ Projects │ About │ Contact │
+   └────────────────────────────────────────┘
+        │          │         │       │
+        ▼          ▼         ▼       ▼
+      /         /projects  /about  /contact
+     (Hero)    (scroll)  (scroll) (scroll)
+
+5. CTA Buttons (Hero Section):
+   - "View Our Work" → /projects (scrolls to projects section)
+   - "Get in touch" → /contact (scrolls to contact section)
+
+6. Footer Navigation:
+   - Logo/Brand link → / (scrolls to top)
+   - Social links → External URLs (open in new tab)
+
+================================================================================
+9. HOMEPAGE IMPLEMENTATION (HomeView.vue)
+================================================================================
+
+HomeView.vue is the single view component that renders the entire homepage.
+
+Template Structure:
+───────────────────
+
+<div>
+  ├── <HeroSection />        # Hero banner with headline, CTAs, stats
+  └── <ProjectsSection />    # Grid of project cards
+</div>
+
+Implementation Details:
+
+1. Component Imports:
+   - HeroSection: The main hero banner
+   - ProjectsSection: The projects grid
+
+2. Route Awareness:
+   - Uses useRoute() to access current route information
+   - Implements a sectionMap to translate route names to DOM element IDs
+
+3. Scroll Coordination:
+   - Watches both route.name and showSite (loading state)
+   - Only scrolls to sections after loading screen completes
+   - Uses setTimeout(100ms) to ensure DOM is ready
+
+4. Current Sections:
+   - HeroSection: Always visible at top, contains:
+     * Headline: "Designing the built environment with precision"
+     * Subtitle: Description of the practice
+     * CTAs: "View Our Work" and "Get in touch" buttons
+     * Stats: 15+ Years, 80+ Projects, 12 Awards
+     * Image: /images/loader.png (architectural image)
+
+   - ProjectsSection: Scrollable section with:
+     * Section header: "Selected Works" / "Projects"
+     * Grid of ProjectCard components (2 columns on desktop)
+     * Currently 4 projects displayed
+
+================================================================================
+10. COMPONENT ARCHITECTURE
+================================================================================
+
+AppHeader.vue (Fixed Navigation):
+─────────────────────────────────
+- Fixed position at top of viewport
+- Transparent on load, gains background + blur on scroll
+- Scroll thresholds: Enter at 50px, Exit at 20px (hysteresis)
+- Desktop: Horizontal nav links
+- Mobile: Hamburger menu with full-screen overlay
+- Mobile menu has staggered animation for menu items
+- Uses body overflow hidden when mobile menu is open
+
+Features:
+- Logo links to /
+- Nav links: Projects (/projects), About (/about), Contact (/contact)
+- Smooth transitions between transparent and opaque states
+- Backdrop blur effect when scrolled
+
+AppFooter.vue (Site Footer):
+────────────────────────────
+- Three-column grid layout
+- Brand section with logo and description
+- Contact information (email, phone, address)
+- Social links (Instagram, LinkedIn, Behance) - external links
+- Copyright notice with current year
+- Tagline: "Built with intention"
+
+HeroSection.vue (Hero Banner):
+─────────────────────────────
+- Full viewport height (min-h-dvh)
+- Two-column layout on desktop, single column on mobile
+- Left column: Text content with CTAs
+- Right column: Architectural image
+- Background effects:
+  * Subtle grid pattern (48px grid, 4% opacity)
+  * Warm ambient glow (radial gradient, 6% opacity)
+- Animated stats bar at bottom
+- Uses @vueuse/motion for scroll-triggered animations
+
+ProjectsSection.vue (Projects Grid):
+────────────────────────────────────
+- Section ID: #projects (for scroll navigation)
+- Two-column responsive grid
+- Loads project data from PROJECTS constant
+- Each project rendered as ProjectCard component
+- Staggered animation for card entrance
+
+ProjectCard.vue (Individual Project):
+─────────────────────────────────────
+- Card with image, metadata, and hover effects
+- Features:
+  * Image with loading skeleton (via ImageLoader)
+  * Parallax effect on mouse movement (8px max offset)
+  * Hover overlay showing project description
+  * Metadata: category, year, location
+  * Accent border animation on hover
+  * Title color change on hover
+- Mouse tracking for parallax: normalizes coordinates to [-1, 1] range
+
+ImageLoader.vue (Image with Skeleton):
+──────────────────────────────────────
+- Handles image loading states
+- Shows shimmer skeleton while loading
+- Fallback placeholder on error
+- Smooth fade-in transition (700ms)
+- Emits 'loaded' event when image loads
+- Uses CSS shimmer animation (1.8s cycle)
+
+BackToTop.vue (Scroll Button):
+─────────────────────────────
+- Teleported to body (outside component tree)
+- Fixed position: bottom-right corner
+- Visible when scrolled past 80% of viewport height
+- Smooth scroll to top on click
+- Transition: translate + opacity + pointer-events
+
+LoadingScreen.vue (Splash Animation):
+─────────────────────────────────────
+- Teleported to body
+- Full-screen overlay (z-index: 100)
+- Animation sequence:
+  1. Logo fade-up (0.6s, delayed 0.4s)
+  2. Accent line scale-in (0.6s, delayed 1.0s)
+  3. Hold for 0.8s
+  4. Fade out (0.7s)
+  5. Emit 'complete' event
+- Total duration: ~2.6 seconds
+
+================================================================================
+11. STYLING & THEME SYSTEM (style.css)
+================================================================================
+
+Theme Variables (Custom Properties):
+────────────────────────────────────
+
+Backgrounds:
+- --color-background: #F8F6F3 (main background, warm off-white)
+- --color-surface: #F0EDE8 (secondary surfaces)
+- --color-card: #FFFFFF (card backgrounds)
+
+Text:
+- --color-foreground: #1A1A1A (primary text, near-black)
+- --color-muted: #4A4A4A (secondary text)
+- --color-subtle: #767676 (tertiary text)
+
+Accents:
+- --color-accent: #8B7355 (primary accent, warm brown)
+- --color-accent-soft: #C9B8A2 (light accent)
+- --color-accent-deep: #5C4F3E (dark accent)
+
+Architectural:
+- --color-line: #D4CBC3 (borders, dividers)
+- --color-highlight: #B49F8A (highlights)
+
+Typography:
+- --font-sans: "Inter" (body text)
+- --font-display: "Playfair Display" (headings)
+- --font-accent: "Space Grotesk" (labels, accents)
+
+Global Styles:
+──────────────
+
+- Smooth scrolling enabled on html element
+- Custom scrollbar styling (6px width, accent color)
+- Selection highlighting (accent background, white text)
+- Antialiased text rendering
+
+Tailwind Integration:
+─────────────────────
+- Uses @tailwindcss/vite plugin
+- Custom theme variables integrated via @theme directive
+- Utility classes used throughout components
+
+================================================================================
+12. ANIMATION SYSTEM
+================================================================================
+
+Primary Animation Library:
+─────────────────────────
+@vueuse/motion (v-motion directive)
+
+Animation Patterns Used:
+────────────────────────
+
+1. HeroSection Animations:
+   - Headline: Fade-up (opacity 0→1, y 40→0, 800ms, 200ms delay)
+   - Subtitle: Fade-up (opacity 0→1, y 30→0, 800ms, 400ms delay)
+   - CTAs: Fade-up (opacity 0→1, y 30→0, 800ms, 600ms delay)
+   - Stats: Fade-up (opacity 0→1, y 20→0, 700ms, 800ms delay)
+   - Image: Fade-left (opacity 0→1, x 60→0, 1000ms, 300ms delay)
+
+2. ProjectsSection Animations:
+   - Section header: Fade-up (opacity 0→1, y 20→0, 600ms)
+   - Project title: Fade-up (opacity 0→1, y 30→0, 700ms, 150ms delay)
+   - Project cards: Staggered fade-up (delay increases by 150ms per card)
+
+3. LoadingScreen Animations:
+   - Logo: Custom fadeUp keyframe (0.6s, 0.4s delay)
+   - Accent line: Custom scaleIn keyframe (0.6s, 1.0s delay)
+
+4. CSS Transitions:
+   - Header background: 500ms ease
+   - Mobile overlay: 400ms cubic-bezier(0.22, 1, 0.36, 1)
+   - Menu items: 450ms cubic-bezier(0.22, 1, 0.36, 1) with stagger
+   - Image loading: 700ms ease-out
+   - Hover effects: 300ms ease
+   - Back-to-top: 500ms ease-out
+
+Animation Characteristics:
+──────────────────────────
+- All animations are "once" triggered (visible-once)
+- Staggered delays create sequential reveal effects
+- Cubic-bezier curves for smooth, natural motion
+- Hardware-accelerated transforms (translate, scale)
+
+================================================================================
+13. DATA LAYER
+================================================================================
+
+Project Data Structure:
+───────────────────────
+
+Interface Project {
+  id: string        // Unique identifier (e.g., 'riverside-pavilion')
+  title: string     // Display name (e.g., 'Riverside Pavilion')
+  category: string  // Type (e.g., 'Cultural', 'Residential')
+  description: string // Brief description
+  image: string     // URL to project image
+  location: string  // City, Country
+  year: number      // Year of completion
+}
+
+Current Projects:
+─────────────────
+
+1. Riverside Pavilion
+   - Category: Cultural
+   - Location: Portland, Oregon
+   - Year: 2024
+   - Image: Unsplash architectural photo
+
+2. Terra Hills Residence
+   - Category: Residential
+   - Location: Sonoma, California
+   - Year: 2023
+   - Image: Unsplash residential photo
+
+3. Metro Bridge
+   - Category: Infrastructure
+   - Location: Rotterdam, Netherlands
+   - Year: 2024
+   - Image: Unsplash bridge photo
+
+4. Atelier Gallery
+   - Category: Commercial
+   - Location: Berlin, Germany
+   - Year: 2023
+   - Image: Unsplash gallery photo
+
+Data Source:
+────────────
+Projects are defined as a constant array in src/types/project.ts.
+No API calls or external data fetching is implemented.
+All data is static and bundled with the application.
+
+================================================================================
+END OF DOCUMENTATION
+================================================================================
+
+Document Version: 1.0
+Last Updated: July 18, 2026

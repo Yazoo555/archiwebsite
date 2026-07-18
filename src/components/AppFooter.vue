@@ -12,11 +12,11 @@
             to="/"
             class="font-accent text-sm font-medium tracking-[0.25em] uppercase transition-colors duration-300 hover:text-accent"
           >
-            Studio
+            Manjila Shrestha
           </router-link>
           <p class="mt-4 font-sans text-sm font-light leading-relaxed text-muted max-w-xs max-sm:max-w-full">
-            Architecture practice based in Portland, working internationally
-            on projects that seek honesty in material and clarity in space.
+            An architect based in Portland, working internationally on
+            projects that seek honesty in material and clarity in space.
           </p>
         </div>
 
@@ -30,10 +30,10 @@
           <ul class="space-y-3">
             <li>
               <a
-                href="mailto:hello@studio.com"
+                href="mailto:hello@manjilashrestha.com"
                 class="font-sans text-sm font-light text-muted transition-colors duration-300 hover:text-foreground"
               >
-                hello@studio.com
+                hello@manjilashrestha.com
               </a>
             </li>
             <li>
@@ -89,7 +89,7 @@
         class="mt-12 sm:mt-16 flex flex-col items-center justify-between gap-4 border-t border-line pt-8 md:flex-row"
       >
         <p class="font-sans text-xs font-light text-subtle">
-          &copy; {{ currentYear }} Studio. All rights reserved.
+          &copy; {{ currentYear }} Manjila Shrestha. All rights reserved.
         </p>
         <p class="font-sans text-[10px] font-light text-subtle/60">
           Built with intention

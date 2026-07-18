@@ -51,9 +51,8 @@
           }"
           class="mt-6 sm:mt-8 max-w-lg font-sans text-base leading-relaxed text-muted sm:text-lg"
         >
-          An architecture and engineering practice committed to structural
-          clarity, material honesty, and spaces that serve both people and
-          planet.
+          An architect committed to structural clarity, material honesty,
+          and spaces that serve both people and planet.
         </p>
 
         <!-- CTA -->
@@ -71,7 +70,7 @@
             to="/projects"
             class="group inline-flex min-h-[44px] items-center gap-3 bg-foreground px-6 sm:px-8 py-2.5 sm:py-3.5 font-sans text-sm font-medium tracking-wide text-background transition-all duration-300 hover:bg-accent"
           >
-            View Our Work
+            View My Work
             <svg
               class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
               viewBox="0 0 16 16"
@@ -135,8 +134,8 @@
 
 <script setup lang="ts">
 const stats = [
-  { value: '15+', label: 'Years Experience' },
-  { value: '80+', label: 'Projects Delivered' },
-  { value: '12', label: 'Design Awards' },
+  { value: '2', label: 'Years Practice' },
+  { value: 'B.Arch', label: 'Degree' },
+  { value: '1', label: 'Thesis Project' },
 ]
 </script>

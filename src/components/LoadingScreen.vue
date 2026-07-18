@@ -8,7 +8,7 @@
         <!-- Logo image with fade-up animation -->
         <img
           src="/images/logo.png"
-          alt="Studio"
+          alt="Manjila Shrestha"
           class="h-32 w-auto sm:h-48 md:h-60 object-contain logo-image"
         />
 

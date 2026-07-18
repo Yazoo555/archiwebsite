@@ -23,7 +23,7 @@
       <router-link to="/" class="block shrink-0">
         <img
           src="/images/logo.png"
-          alt="Studio"
+          alt="Manjila Shrestha"
           class="h-[38px] w-auto sm:h-[46px] md:h-[58px] object-contain"
         />
       </router-link>
