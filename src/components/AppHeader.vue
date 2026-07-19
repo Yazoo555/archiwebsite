@@ -33,8 +33,8 @@
         />
       </router-link>
 
-      <!-- Desktop Nav Links -->
-      <ul class="hidden items-center gap-10 md:flex" role="list">
+      <!-- Desktop Nav Links (hidden on mobile, shown on md+) -->
+      <ul class="hidden items-center gap-10 lg:flex" role="list">
         <li v-for="link in routeLinks" :key="link.to">
           <router-link
             :to="link.to"
@@ -53,7 +53,7 @@
 
       <!-- Mobile Menu Button -->
       <button
-        class="hamburger-btn relative z-[60] md:hidden"
+        class="hamburger-btn relative z-[60]"
         :class="{ 'is-open': isMobileOpen }"
         :aria-label="isMobileOpen ? 'Close menu' : 'Open menu'"
         :aria-expanded="isMobileOpen"
@@ -359,5 +359,18 @@ onUnmounted(() => {
 /* ── Desktop nav active state ───────────────────────────────────────────── */
 .nav-link.is-active {
   color: var(--color-foreground);
+}
+
+/* ── Hide hamburger + mobile overlay on large screens (lg = 64rem / 1024px) ── */
+/* Using scoped CSS to match specificity — Tailwind v4 utilities lack !important
+   and would be overridden by Vue's scoped attribute selector. */
+@media (width >= 64rem) {
+  .hamburger-btn {
+    display: none;
+  }
+
+  .mobile-overlay {
+    display: none;
+  }
 }
 </style>
