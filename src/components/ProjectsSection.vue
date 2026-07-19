@@ -1,7 +1,7 @@
 <template>
   <section
     id="projects"
-    class="relative px-6 pb-20 pt-16 sm:pb-32 sm:pt-24 md:px-10 md:pb-40 md:pt-32"
+    class="relative px-6 pb-16 pt-12 sm:pb-24 sm:pt-16 md:px-10 md:pb-32 md:pt-24"
   >
     <div class="mx-auto max-w-7xl">
       <!-- Section Header -->
@@ -25,7 +25,7 @@
       </div>
 
       <!-- Project Grid -->
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:gap-10">
+      <div class="grid gap-8 md:grid-cols-2 xl:gap-10">
         <div
           v-for="(project, index) in projects"
           :key="project.id"

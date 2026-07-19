@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-dvh bg-background">
+  <div class="min-h-dvh bg-background overflow-x-hidden">
     <AppHeader />
     <main>
       <router-view />

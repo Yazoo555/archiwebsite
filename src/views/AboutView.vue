@@ -2,7 +2,7 @@
   <!-- ──────────────────────────────────────────── -->
   <!-- SECTION 1 — INTRO HERO                      -->
   <!-- ──────────────────────────────────────────── -->
-  <section class="relative overflow-hidden px-6 pb-20 pt-28 sm:pb-28 sm:pt-36 md:px-12 lg:pb-32 lg:pt-40">
+  <section class="relative overflow-hidden px-6 pb-16 pt-24 sm:pb-20 sm:pt-32 md:px-12 lg:pb-32 lg:pt-40">
     <!-- Subtle background grid (matching HeroSection) -->
     <div
       class="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -15,7 +15,7 @@
     />
 
     <div class="relative z-10 mx-auto max-w-7xl">
-      <div class="grid gap-16 lg:grid-cols-[2fr_3fr] lg:gap-20 xl:gap-28">
+      <div class="grid gap-12 lg:grid-cols-[2fr_3fr] lg:gap-20 xl:gap-28">
         <!-- ── LEFT COLUMN (40%) ── -->
         <div class="flex flex-col justify-center">
           <!-- Label -->
@@ -114,7 +114,7 @@
                 TODO: replace with a YakScape render or Manjila's portrait.
                 Do not use stock / generic images here.
               -->
-              <div class="aspect-[4/5] w-full bg-surface">
+              <div class="aspect-[4/5] w-full max-h-[420px] sm:max-h-[520px] lg:max-h-none bg-surface">
                 <ImageLoader
                   src="/images/card.png"
                   alt="Manjila Shrestha — Architect"
@@ -140,7 +140,7 @@
   <!-- ──────────────────────────────────────────── -->
   <!-- SECTION 2 — FEATURED PROJECT (YakScape)     -->
   <!-- ──────────────────────────────────────────── -->
-  <section class="relative px-6 py-24 sm:py-32 md:px-12 md:py-40">
+  <section class="relative px-6 py-16 sm:py-24 md:px-12 md:py-32">
     <div class="mx-auto max-w-7xl">
       <!-- Section header -->
       <div
@@ -180,14 +180,10 @@
           class="order-1"
         >
           <div
-            class="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-xl ring-1 ring-line/20"
+            class="relative aspect-[9/13] max-h-[420px] sm:max-h-[560px] lg:max-h-none overflow-hidden rounded-2xl shadow-xl ring-1 ring-line/20"
           >
-            <!--
-              TODO: replace with a YakScape render, site photo, or concept
-              diagram. Do not use stock / generic images.
-            -->
             <ImageLoader
-              src="/images/card.png"
+              src="/images/yakscape.jpeg"
               alt="YakScape — conceptual view of the facility in Khahare, Ramechhap"
             />
           </div>
@@ -263,7 +259,7 @@
   <!-- ──────────────────────────────────────────── -->
   <!-- SECTION 3 — VALUES                          -->
   <!-- ──────────────────────────────────────────── -->
-  <section class="relative px-6 py-24 sm:py-32 md:px-12 md:py-40">
+  <section class="relative px-6 py-16 sm:py-24 md:px-12 md:py-32">
     <div class="mx-auto max-w-7xl">
       <!-- Section header -->
       <div
@@ -285,7 +281,7 @@
       </div>
 
       <!-- Values grid -->
-      <div class="grid gap-6 md:grid-cols-3 md:gap-8">
+      <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
         <div
           v-for="(value, index) in values"
           :key="value.title"

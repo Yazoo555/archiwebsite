@@ -4,7 +4,7 @@
   >
     <div class="mx-auto max-w-7xl">
       <div
-        class="grid gap-12 md:grid-cols-3"
+        class="grid gap-10 sm:grid-cols-2 md:grid-cols-3"
       >
         <!-- Brand -->
         <div class="md:col-span-1">
@@ -31,7 +31,7 @@
             <li>
               <a
                 href="mailto:hello@manjilashrestha.com"
-                class="font-sans text-sm font-light text-muted transition-colors duration-300 hover:text-foreground"
+                class="font-sans text-sm font-light text-muted transition-colors duration-300 hover:text-foreground break-all"
               >
                 hello@manjilashrestha.com
               </a>

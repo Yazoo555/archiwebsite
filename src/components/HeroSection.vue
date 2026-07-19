@@ -20,7 +20,7 @@
     />
 
     <div
-      class="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center gap-10 sm:gap-14 lg:flex-row lg:gap-20 pt-20 sm:pt-24 lg:pt-0"
+      class="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center gap-8 sm:gap-12 lg:flex-row lg:gap-20 pt-20 sm:pt-24 lg:pt-0 pb-12 sm:pb-16 lg:pb-0"
     >
       <!-- Left Column — Text Content -->
       <div
@@ -49,7 +49,7 @@
             y: 0,
             transition: { duration: 800, delay: 400 },
           }"
-          class="mt-6 sm:mt-8 max-w-lg font-sans text-base leading-relaxed text-muted sm:text-lg"
+          class="mt-6 sm:mt-8 max-w-full sm:max-w-lg font-sans text-base leading-relaxed text-muted sm:text-lg"
         >
           An architect committed to structural clarity, material honesty,
           and spaces that serve both people and planet.
@@ -102,7 +102,7 @@
             y: 0,
             transition: { duration: 700, delay: 800 },
           }"
-          class="mt-10 sm:mt-16 flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-12 lg:gap-16 border-t border-line pt-8 sm:pt-10"
+          class="mt-8 sm:mt-14 flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-16 border-t border-line pt-7 sm:pt-10"
         >
           <div v-for="stat in stats" :key="stat.label" class="flex flex-col items-center">
             <span class="font-accent text-2xl sm:text-3xl md:text-4xl font-medium text-foreground">{{ stat.value }}</span>
@@ -120,12 +120,12 @@
           x: 0,
           transition: { duration: 1000, delay: 300 },
         }"
-        class="relative flex w-full items-center justify-center lg:flex-1"
+        class="relative flex w-full shrink-0 items-center justify-center lg:flex-1 lg:shrink"
       >
         <img
           src="/images/loader.png"
           alt="Architectural project"
-          class="w-full max-w-[220px] sm:max-w-[280px] md:max-w-[340px] lg:max-w-[400px] h-auto object-contain drop-shadow-xl"
+          class="w-auto max-h-[200px] sm:max-h-[260px] md:max-h-[320px] lg:max-h-none lg:w-full lg:max-w-[400px] object-contain drop-shadow-xl"
         />
       </div>
     </div>
