@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
+import ContactView from '@/views/ContactView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -23,7 +24,7 @@ const router = createRouter({
     {
       path: '/contact',
       name: 'contact',
-      component: HomeView,
+      component: ContactView,
     },
     // Catch-all: redirect unknown paths to home
     {
@@ -42,8 +43,8 @@ const router = createRouter({
     }
     // On fresh page load / refresh with a named section route,
     // scroll directly to that section's element.
-    if (to.name === 'projects' || to.name === 'contact') {
-      return { el: '#' + to.name, behavior: 'instant' }
+    if (to.name === 'projects') {
+      return { el: '#projects', behavior: 'instant' }
     }
     // On fresh page load / refresh (home), scroll to top.
     // Use instant scrolling since there's no user interaction to animate.
