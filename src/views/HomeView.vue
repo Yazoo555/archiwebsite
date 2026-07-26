@@ -127,11 +127,12 @@
           </div>
           <!-- Bottom: 1 wide card -->
           <div
+            v-if="thirdProject"
             v-motion
             :initial="{ opacity: 0, y: 50 }"
             :visible-once="{ opacity: 1, y: 0, transition: { duration: 700, delay: 400 } }"
           >
-            <ProjectCard :project="featuredProjects[2]" layout="wide" />
+            <ProjectCard :project="thirdProject" layout="wide" />
           </div>
         </div>
 
@@ -274,7 +275,8 @@ import HeroSection from '@/components/HeroSection.vue'
 import ProjectCard from '@/components/ProjectCard.vue'
 import { PROJECTS } from '@/types/project'
 
-const featuredProjects = PROJECTS.slice(0, 3)
+const featuredProjects = PROJECTS.slice(0, 2)
+const thirdProject = PROJECTS[2]
 
 const highlights = [
   {
