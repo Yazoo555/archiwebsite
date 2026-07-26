@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
 import ContactView from '@/views/ContactView.vue'
+import ProjectsView from '@/views/ProjectsView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,7 +15,7 @@ const router = createRouter({
     {
       path: '/projects',
       name: 'projects',
-      component: HomeView,
+      component: ProjectsView,
     },
     {
       path: '/about',
@@ -33,22 +34,13 @@ const router = createRouter({
     },
   ],
   scrollBehavior(to, from, savedPosition) {
-    // On back/forward navigation, restore the saved scroll position
     if (savedPosition) {
       return savedPosition
     }
-    // On hash navigation (e.g. /#projects), scroll to the element
     if (to.hash) {
       return { el: to.hash, behavior: 'smooth' }
     }
-    // On fresh page load / refresh with a named section route,
-    // scroll directly to that section's element.
-    if (to.name === 'projects') {
-      return { el: '#projects', behavior: 'instant' }
-    }
-    // On fresh page load / refresh (home), scroll to top.
-    // Use instant scrolling since there's no user interaction to animate.
-    return { top: 0 }
+    return { top: 0, behavior: 'instant' }
   },
 })
 

@@ -1,22 +1,22 @@
 <template>
   <header
     ref="headerRef"
-    class="fixed top-0 left-0 right-0 z-50 transition-colors duration-500"
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
     :class="[
       isScrolled
-        ? 'bg-background/90 shadow-[0_1px_0_rgba(44,44,44,0.06)]'
+        ? 'bg-background/92 shadow-[0_1px_0_rgba(44,44,44,0.08)]'
         : 'bg-transparent',
     ]"
   >
-    <!-- Backdrop blur — separate layer avoids backdrop-filter creating a fixed stacking context -->
+    <!-- Backdrop blur -->
     <div
       class="absolute inset-0 -z-10 transition-opacity duration-500 pointer-events-none"
       :class="isScrolled ? 'opacity-100' : 'opacity-0'"
-      style="backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"
+      style="backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);"
     />
 
     <nav
-      class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10"
+      class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10 md:py-5"
       aria-label="Main navigation"
     >
       <!-- Logo -->
@@ -29,42 +29,52 @@
         <img
           src="/images/logo.png"
           alt="Manjila Shrestha"
-          class="h-[38px] w-auto sm:h-[46px] md:h-[58px] object-contain"
+          class="h-[36px] w-auto sm:h-[42px] md:h-[52px] object-contain"
         />
       </router-link>
 
-      <!-- Desktop Nav Links (hidden on mobile, shown on md+) -->
-      <ul class="hidden items-center gap-10 lg:flex" role="list">
+      <!-- Desktop Nav Links -->
+      <ul class="hidden items-center gap-8 lg:flex" role="list">
         <li v-for="link in routeLinks" :key="link.to">
           <router-link
             :to="link.to"
-            class="nav-link group relative font-sans text-sm font-light tracking-wide text-muted transition-colors duration-300 hover:text-foreground"
+            class="nav-link group relative font-accent text-[11px] font-medium tracking-[0.18em] uppercase text-muted transition-colors duration-300 hover:text-foreground"
             :class="{ 'is-active': isActive(link.to) }"
           >
             {{ link.label }}
-            <!-- Underline — full width when active, hover-triggered otherwise -->
             <span
-              class="absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300"
-              :class="isActive(link.to) ? 'w-full' : 'w-0 group-hover:w-full'"
+              class="absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300 origin-left"
+              :class="isActive(link.to) ? 'w-full scale-x-100' : 'w-full scale-x-0 group-hover:scale-x-100'"
             />
           </router-link>
         </li>
       </ul>
 
-      <!-- Mobile Menu Button -->
-      <button
-        class="hamburger-btn relative z-[60]"
-        :class="{ 'is-open': isMobileOpen }"
-        :aria-label="isMobileOpen ? 'Close menu' : 'Open menu'"
-        :aria-expanded="isMobileOpen"
-        aria-controls="mobile-menu"
-        @pointerdown.prevent="onHamburgerPointerDown"
-        @click.stop
-      >
-        <span class="hamburger-bar top-bar" aria-hidden="true" />
-        <span class="hamburger-bar mid-bar" aria-hidden="true" />
-        <span class="hamburger-bar bot-bar" aria-hidden="true" />
-      </button>
+      <!-- CTA + Hamburger -->
+      <div class="flex items-center gap-4">
+        <!-- Desktop CTA -->
+        <router-link
+          to="/contact"
+          class="hidden lg:inline-flex items-center gap-2 bg-foreground text-background font-accent text-[11px] font-medium tracking-[0.15em] uppercase px-5 py-2.5 transition-all duration-300 hover:bg-accent"
+        >
+          Get in Touch
+        </router-link>
+
+        <!-- Mobile Menu Button -->
+        <button
+          class="hamburger-btn relative z-[60] lg:hidden"
+          :class="{ 'is-open': isMobileOpen }"
+          :aria-label="isMobileOpen ? 'Close menu' : 'Open menu'"
+          :aria-expanded="isMobileOpen"
+          aria-controls="mobile-menu"
+          @pointerdown.prevent="onHamburgerPointerDown"
+          @click.stop
+        >
+          <span class="hamburger-bar top-bar" aria-hidden="true" />
+          <span class="hamburger-bar mid-bar" aria-hidden="true" />
+          <span class="hamburger-bar bot-bar" aria-hidden="true" />
+        </button>
+      </div>
     </nav>
 
     <!-- Mobile Menu Overlay -->
@@ -85,7 +95,7 @@
 
       <!-- Nav links -->
       <nav
-        class="relative z-10 flex flex-col items-center gap-6 sm:gap-8 px-6"
+        class="relative z-10 flex flex-col items-center gap-5 sm:gap-7 px-6"
         aria-label="Mobile navigation"
       >
         <router-link
@@ -94,20 +104,29 @@
           :to="link.to"
           class="menu-item group relative font-display text-3xl sm:text-4xl font-light tracking-wide text-foreground"
           :class="{ 'is-active': isActive(link.to) }"
-          :style="{ transitionDelay: isMobileOpen ? `${0.08 + index * 0.06}s` : '0s' }"
+          :style="{ transitionDelay: isMobileOpen ? `${0.06 + index * 0.05}s` : '0s' }"
           @click="closeMobileMenu"
         >
-          <!-- Active/hover underline accent -->
           <span
             class="absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300"
             :class="isActive(link.to) ? 'w-full' : 'w-0 group-hover:w-full'"
           />
           {{ link.label }}
         </router-link>
+
+        <!-- Mobile CTA -->
+        <router-link
+          to="/contact"
+          class="menu-item mt-4 inline-flex items-center bg-accent text-background font-accent text-xs font-medium tracking-[0.2em] uppercase px-8 py-3"
+          :style="{ transitionDelay: isMobileOpen ? `${0.06 + routeLinks.length * 0.05}s` : '0s' }"
+          @click="closeMobileMenu"
+        >
+          Get in Touch
+        </router-link>
       </nav>
 
-      <!-- Subtle footer inside the mobile menu -->
-      <p class="menu-footer absolute bottom-8 font-sans text-[10px] font-light tracking-[0.2em] uppercase text-subtle/50">
+      <!-- Subtle footer inside mobile menu -->
+      <p class="menu-footer absolute bottom-8 font-accent text-[10px] font-medium tracking-[0.25em] uppercase text-subtle/40">
         Manjila Shrestha · Architect
       </p>
     </div>
@@ -124,9 +143,9 @@ interface RouteLink {
 }
 
 const routeLinks: RouteLink[] = [
-  { label: 'Projects', to: '/projects' },
+  { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
-  { label: 'Contact', to: '/contact' },
+  { label: 'Projects', to: '/projects' },
 ]
 
 const route = useRoute()
@@ -134,9 +153,8 @@ const headerRef = ref<HTMLElement | null>(null)
 const isScrolled = ref(false)
 const isMobileOpen = ref(false)
 
-// ── Scroll state ──────────────────────────────────────────────────────────────
-const ENTER_SCROLL = 50
-const EXIT_SCROLL  = 20
+const ENTER_SCROLL = 40
+const EXIT_SCROLL  = 16
 
 const handleScroll = () => {
   const y = window.scrollY
@@ -144,15 +162,11 @@ const handleScroll = () => {
   else if (y < EXIT_SCROLL) isScrolled.value = false
 }
 
-// ── Active route ──────────────────────────────────────────────────────────────
 const isActive = (to: string) => {
   if (to === '/') return route.path === '/'
   return route.path.startsWith(to)
 }
 
-// ── iOS scroll lock ───────────────────────────────────────────────────────────
-// `overflow: hidden` on body alone does not prevent scrolling on iOS Safari.
-// Locking the scroll position via `position: fixed` is the bulletproof approach.
 let scrollY = 0
 
 const lockScroll = () => {
@@ -173,7 +187,6 @@ const unlockScroll = () => {
   window.scrollTo({ top: scrollY, behavior: 'instant' })
 }
 
-// ── Menu open / close ─────────────────────────────────────────────────────────
 const openMobileMenu = () => {
   isMobileOpen.value = true
   lockScroll()
@@ -185,33 +198,21 @@ const closeMobileMenu = () => {
   unlockScroll()
 }
 
-/**
- * Using @pointerdown instead of @click eliminates the 300ms synthetic click
- * delay that browsers fire on touchscreen taps. We call .preventDefault() to
- * also suppress the subsequent mousedown → mouseup → click sequence that would
- * otherwise fire twice.
- */
 const onHamburgerPointerDown = () => {
   isMobileOpen.value ? closeMobileMenu() : openMobileMenu()
 }
 
-// ── Keyboard accessibility ────────────────────────────────────────────────────
 const onKeyDown = (e: KeyboardEvent) => {
   if (e.key === 'Escape' && isMobileOpen.value) {
     closeMobileMenu()
   }
 }
 
-// ── Close on route change ─────────────────────────────────────────────────────
-// Handles clicking a link that's already the current route (router won't
-// emit a navigation event in that case, but the @click handler on the link
-// fires, which calls closeMobileMenu directly — this watcher is a safety net).
 watch(
   () => route.path,
   () => closeMobileMenu(),
 )
 
-// ── Lifecycle ─────────────────────────────────────────────────────────────────
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true })
   window.addEventListener('keydown', onKeyDown)
@@ -226,20 +227,17 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* ── Hamburger button ────────────────────────────────────────────────────── */
+/* ── Hamburger button ── */
 .hamburger-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* Explicit hit area — 44×44 px minimum per WCAG 2.5.5 */
   width: 44px;
   height: 44px;
   gap: 5px;
   border-radius: 6px;
-  /* Prevent browser from treating this as a double-tap zoom target */
   touch-action: manipulation;
-  /* No flash on tap */
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
 }
@@ -249,14 +247,13 @@ onUnmounted(() => {
   outline-offset: 2px;
 }
 
-/* ── Hamburger bars ──────────────────────────────────────────────────────── */
+/* ── Hamburger bars ── */
 .hamburger-bar {
   display: block;
   height: 1.5px;
   width: 22px;
   border-radius: 1px;
   background-color: var(--color-foreground);
-  /* Use individual properties instead of `all` for better GPU compositing */
   transition:
     transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
     opacity   0.22s ease,
@@ -265,9 +262,7 @@ onUnmounted(() => {
   will-change: transform;
 }
 
-/* ── X animation — open state ─────────────────────────────────────────── */
-/* Gap is 5px. Bar height is 1.5px. Centre-to-centre distance = 5 + 1.5 = 6.5px.
-   Translating by 6.5px aligns bars perfectly before rotating 45°. */
+/* ── X animation ── */
 .hamburger-btn.is-open .top-bar {
   transform: translateY(6.5px) rotate(45deg);
 }
@@ -281,7 +276,7 @@ onUnmounted(() => {
   transform: translateY(-6.5px) rotate(-45deg);
 }
 
-/* ── Mobile overlay ──────────────────────────────────────────────────────── */
+/* ── Mobile overlay ── */
 .mobile-overlay {
   position: fixed;
   inset: 0;
@@ -289,13 +284,11 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Safe area padding for notched / Dynamic Island devices */
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
-  background-color: color-mix(in srgb, var(--color-background) 97%, transparent);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  /* Hidden state */
+  background-color: color-mix(in srgb, var(--color-background) 96%, transparent);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -313,11 +306,10 @@ onUnmounted(() => {
     visibility  0.38s step-start;
 }
 
-/* ── Menu items ─────────────────────────────────────────────────────────── */
+/* ── Menu items ── */
 .menu-item {
   opacity: 0;
   transform: translateY(20px);
-  /* Fast exit — no stagger */
   transition:
     opacity   0.18s ease,
     transform 0.18s ease,
@@ -328,7 +320,6 @@ onUnmounted(() => {
 .is-open .menu-item {
   opacity: 1;
   transform: translateY(0);
-  /* Slow staggered entry — delay set via inline :style */
   transition:
     opacity   0.42s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
@@ -343,7 +334,7 @@ onUnmounted(() => {
   color: var(--color-accent);
 }
 
-/* ── Menu footer ────────────────────────────────────────────────────────── */
+/* ── Menu footer ── */
 .menu-footer {
   opacity: 0;
   transform: translateY(6px);
@@ -356,21 +347,8 @@ onUnmounted(() => {
   transition-delay: 0.32s;
 }
 
-/* ── Desktop nav active state ───────────────────────────────────────────── */
+/* ── Desktop nav active state ── */
 .nav-link.is-active {
   color: var(--color-foreground);
-}
-
-/* ── Hide hamburger + mobile overlay on large screens (lg = 64rem / 1024px) ── */
-/* Using scoped CSS to match specificity — Tailwind v4 utilities lack !important
-   and would be overridden by Vue's scoped attribute selector. */
-@media (width >= 64rem) {
-  .hamburger-btn {
-    display: none;
-  }
-
-  .mobile-overlay {
-    display: none;
-  }
 }
 </style>

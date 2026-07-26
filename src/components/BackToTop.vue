@@ -2,21 +2,21 @@
   <Teleport to="body">
     <button
       :class="[
-        'fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50 flex h-11 w-11 items-center justify-center border border-line bg-background/80 backdrop-blur-sm shadow-sm transition-all duration-500 ease-out',
+        'fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 flex h-10 w-10 items-center justify-center bg-foreground/90 backdrop-blur-sm shadow-lg transition-all duration-400 ease-out hover:bg-accent',
         visible
           ? 'translate-y-0 opacity-100 pointer-events-auto'
-          : 'translate-y-4 opacity-0 pointer-events-none',
+          : 'translate-y-6 opacity-0 pointer-events-none',
       ]"
       aria-label="Back to top"
       title="Back to top"
       @click="scrollToTop"
     >
       <svg
-        class="h-4 w-4 text-foreground/60 transition-colors duration-300 hover:text-accent"
+        class="h-3.5 w-3.5 text-background"
         viewBox="0 0 16 16"
         fill="none"
         stroke="currentColor"
-        stroke-width="1.5"
+        stroke-width="1.8"
         stroke-linecap="round"
         stroke-linejoin="round"
       >
@@ -32,7 +32,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 const visible = ref(false)
 
 const handleScroll = () => {
-  visible.value = window.scrollY > window.innerHeight * 0.8
+  visible.value = window.scrollY > window.innerHeight * 0.6
 }
 
 const scrollToTop = () => {
